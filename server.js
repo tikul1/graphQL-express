@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("./db/db");
 const app = express();
 const PORT = 4000;
 const graphQL = require("graphql");

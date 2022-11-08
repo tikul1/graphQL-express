@@ -105,6 +105,14 @@ const RootQuery = new GraphQLObjectType({
         return products.find((product) => product.id === args.id);
       },
     },
+    pCatagory: {
+      type: pCatagortiesType,
+      description: "List of single product Type",
+      args: { id: { type: GraphQLInt } },
+      resolve(parent, args) {
+        return pCategories.find((product) => product.id === args.id);
+      },
+    },
     getAllProducts: {
       type: new GraphQLList(productType),
       description: "List of all products",
@@ -124,32 +132,45 @@ const RootQuery = new GraphQLObjectType({
   },
 });
 
-// const Mutation = new GraphQLObjectType({
-//   name: "Mutation",
-//   fields: {
-//     createUser: {
-//       type: UserType,
-//       args: {
-//         first_name: { type: GraphQLString },
-//         last_name: { type: GraphQLString },
-//         email: { type: GraphQLString },
-//         gender: { type: GraphQLString },
-//       },
-//       resolve(parent, args) {
-//         userData.push({
-//           id: userData.length + 1,
-//           first_name: args.first_name,
-//           last_name: args.last_name,
-//           email: args.email,
-//           gender: args.gender,
-//         });
-//         return args;
-//       },
-//     },
-//   },
-// });
+const Mutation = new GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    createProduct: {
+      type: productType,
+      args: {
+        name: { type: GraphQLString },
+        id: { type: GraphQLInt },
+        description: { type: GraphQLString },
+        pCategoryId: { type: GraphQLInt },
+      },
+      resolve(parent, args) {
+        products.push({
+          id: products.length + 1,
+          name: args.name,
+          description: args.description,
+          pCategoryId: args.pCategoryId,
+        });
+        return args;
+      },
+    },
+    createType: {
+      type: pCatagortiesType,
+      args: {
+        name: { type: GraphQLString },
+        id: { type: GraphQLInt },
+      },
+      resolve(parent, args) {
+        pCategories.push({
+          id: pCategories.length + 1,
+          name: args.name,
+        });
+        return args;
+      },
+    },
+  },
+});
 
 module.exports = new GraphQLSchema({
   query: RootQuery,
-  // mutation: Mutation
+  mutation: Mutation,
 });
