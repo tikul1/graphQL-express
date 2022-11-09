@@ -7,7 +7,8 @@ const { GraphQLObjectType, GraphQLSchema, GraphQLInt, GraphQLString, GraphQLList
 
 const { graphqlHTTP } = require("express-graphql");
 const data = require("./MOCK_DATA.json");
-const schema = require("./schema");
+// const schema = require("./schema/schema");
+const schema = require("./schema/dbSchema");
 app.use(express.json());
 
 // const UserType = new GraphQLObjectType({

@@ -1,6 +1,6 @@
 // const graphql = require("graphql");
 // const { GraphQLObjectType, GraphQLSchema, GraphQLInt, GraphQLString, GraphQLList } = graphql;
-// const data = require("./MOCK_DATA.json");
+// const data = require("../MOCK_DATA.json");
 // const userType = new GraphQLObjectType({
 //   name: "user",
 //   fields: () => ({
