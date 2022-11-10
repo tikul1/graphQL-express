@@ -39,17 +39,19 @@ const RootQuery = new GraphQLObjectType({
     product: {
       type: productType,
       description: "List of single product",
-      args: { id: { type: GraphQLInt } },
+      args: { id: { type: GraphQLString } },
       resolve(parent, args) {
-        // return products.find((product) => product.id === args.id);
+        let product = products.findOne({ id: args.id });
+        return product;
       },
     },
     brand: {
       type: brandType,
       description: "List of single product Type",
-      args: { id: { type: GraphQLInt } },
+      args: { id: { type: GraphQLString } },
       resolve(parent, args) {
-        // return brands.find((product) => product.id === args.id);
+        let brand = brands.findOne({ id: args.id });
+        return brand;
       },
     },
     getProducts: {
@@ -63,7 +65,6 @@ const RootQuery = new GraphQLObjectType({
     getBrands: {
       type: new GraphQLList(brandType),
       description: "List of all catagories of products",
-      // args: { id: { type: GraphQLInt } },
       resolve(parent, args) {
         let brand = brands.find({});
         return brand;
