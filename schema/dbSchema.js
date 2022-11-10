@@ -1,5 +1,5 @@
 const graphql = require("graphql");
-const { GraphQLObjectType, GraphQLSchema, GraphQLInt, GraphQLString, GraphQLList, GraphQLNonNull } = graphql;
+const { GraphQLObjectType, GraphQLSchema, GraphQLString, GraphQLList, GraphQLNonNull } = graphql;
 const products = require("../model/productModel");
 const brands = require("../model/brandModel");
 
@@ -10,8 +10,12 @@ const brandType = new GraphQLObjectType({
     name: { type: new GraphQLNonNull(GraphQLString) },
     products: {
       type: new GraphQLList(productType),
-      resolve: (pCatagory) => {
-        return products.filter((product) => product.brandId === pCatagory.id);
+      resolve: async (pCatagory) => {
+        let product = await products.find({ brandId: pCatagory.id });
+        // console.log(product);
+        let result = product.filter((p) => p.brandId.equals(pCatagory.id));
+        // console.log(result);
+        return product;
       },
     },
   }),
@@ -26,8 +30,9 @@ const productType = new GraphQLObjectType({
     brandId: { type: new GraphQLNonNull(GraphQLString) },
     brand: {
       type: brandType,
-      resolve: (product) => {
-        // return brands.find((catagory) => catagory.id === product.pCategoryId);
+      resolve: async (product) => {
+        let brand = await brands.findById({ _id: product.brandId });
+        return brand;
       },
     },
   }),
@@ -40,8 +45,8 @@ const RootQuery = new GraphQLObjectType({
       type: productType,
       description: "List of single product",
       args: { id: { type: GraphQLString } },
-      resolve(parent, args) {
-        let product = products.findOne({ id: args.id });
+      async resolve(parent, args) {
+        let product = await products.findOne({ id: args.id });
         return product;
       },
     },
@@ -49,24 +54,24 @@ const RootQuery = new GraphQLObjectType({
       type: brandType,
       description: "List of single product Type",
       args: { id: { type: GraphQLString } },
-      resolve(parent, args) {
-        let brand = brands.findOne({ id: args.id });
+      async resolve(parent, args) {
+        let brand = await brands.findOne({ id: args.id });
         return brand;
       },
     },
     getProducts: {
       type: new GraphQLList(productType),
       description: "List of all products",
-      resolve(parent, args) {
-        let product = products.find({});
+      async resolve(parent, args) {
+        let product = await products.find({});
         return product;
       },
     },
     getBrands: {
       type: new GraphQLList(brandType),
       description: "List of all catagories of products",
-      resolve(parent, args) {
-        let brand = brands.find({});
+      async resolve(parent, args) {
+        let brand = await brands.find({});
         return brand;
       },
     },
@@ -79,10 +84,10 @@ const Mutation = new GraphQLObjectType({
     createProduct: {
       type: productType,
       args: {
-        name: { type: GraphQLString },
-        description: { type: GraphQLString },
-        brand: { type: GraphQLString },
-        brandId: { type: GraphQLString },
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        description: { type: new GraphQLNonNull(GraphQLString) },
+        brand: { type: new GraphQLNonNull(GraphQLString) },
+        brandId: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve(parent, args) {
         let product = new products({
@@ -94,10 +99,28 @@ const Mutation = new GraphQLObjectType({
         return product.save();
       },
     },
+    updateProduct: {
+      type: productType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        description: { type: new GraphQLNonNull(GraphQLString) },
+        brand: { type: new GraphQLNonNull(GraphQLString) },
+        brandId: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(parent, args) {
+        let product = await products.findOne({ id: args.id });
+        // console.log(product);
+        Object.assign(product, args);
+        // console.log(product);
+        // console.log(args.id);
+        return product.save();
+      },
+    },
     createBrand: {
       type: brandType,
       args: {
-        name: { type: GraphQLString },
+        name: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve(parent, args) {
         let brand = new brands({

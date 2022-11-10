@@ -4,7 +4,10 @@ const productSchema = new mongoose.Schema({
   name: String,
   brand: String,
   description: String,
-  brandId: String,
+  brandId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Brand",
+  },
 });
 
 module.exports = mongoose.model("Product", productSchema);
