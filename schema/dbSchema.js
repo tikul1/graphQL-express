@@ -129,6 +129,18 @@ const Mutation = new GraphQLObjectType({
         return brand.save();
       },
     },
+    updateBrand: {
+      type: brandType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        id: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(parent, args) {
+        let brand = await brands.findOne({ id: args.id });
+        Object.assign(brand, args);
+        return brand.save();
+      },
+    },
   },
 });
 
