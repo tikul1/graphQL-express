@@ -141,6 +141,26 @@ const Mutation = new GraphQLObjectType({
         return brand.save();
       },
     },
+    deleteProduct: {
+      type: brandType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(parent, args) {
+        let product = await products.findOneAndRemove({ id: args.id });
+        return product;
+      },
+    },
+    deleteBrand: {
+      type: productType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(parent, args) {
+        let brand = await brands.findOneAndRemove({ id: args.id });
+        return brand;
+      },
+    },
   },
 });
 
