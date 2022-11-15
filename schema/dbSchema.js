@@ -123,6 +123,9 @@ const Mutation = new GraphQLObjectType({
         name: { type: new GraphQLNonNull(GraphQLString) },
       },
       resolve(parent, args) {
+        if (typeof args.name !== "string" || args.name === "") {
+          throw new Error("wrong value");
+        }
         let brand = new brands({
           name: args.name,
         });
