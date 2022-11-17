@@ -7,9 +7,11 @@ const { GraphQLObjectType, GraphQLSchema, GraphQLInt, GraphQLString, GraphQLList
 
 const { graphqlHTTP } = require("express-graphql");
 const data = require("./MOCK_DATA.json");
-// const schema = require("./schema/schema");
-const { schema, root } = require("./schema/schema");
-// const schema = require("./schema/dbSchema");
+// const schema = require("./schema/schema");            // static
+// const { schema, root } = require("./schema/schema"); //static  buildSchema method
+const { schema } = require("./schema/dbSchema"); //db   buildSchema method
+const { root } = require("./resolver/graphqlRoot");
+// const schema = require("./schema/dbSchema");        //db
 app.use(express.json());
 
 // const UserType = new GraphQLObjectType({
@@ -68,6 +70,7 @@ app.use(
     schema,
     graphiql: true,
     rootValue: root,
+    strictPopulate: false,
   })
 );
 app.listen(PORT, () => {
