@@ -24,7 +24,7 @@ type products{
 type brands{
   name:String,
   id:ID
-  subProduct(id):products
+
 }
 
 `);

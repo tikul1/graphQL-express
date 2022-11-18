@@ -14,14 +14,12 @@ const root = {
     let brand = await brands.findOne({ id: args.id });
     return brand;
   },
-
   product: async (args) => {
     return await products.findOne({ id: args.id });
   },
   createProduct: async (args) => {
     return await products.create({ name: args.name, description: args.description, brandId: args.brandId, brand: args.brand });
   },
-
   createBrand: async (args) => {
     return await brands.create({ name: args.name });
   },
