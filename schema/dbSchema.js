@@ -9,6 +9,9 @@ type Query{
   getBrands:[brands]
   brand(id:ID!):brands
   product(id:ID!):products  
+  createProduct(name:String, brand: String, description:String, brandId:ID): products
+  createBrand(name:String) :brands
+  subProduct: products
 },
 type products{
   name:String,
@@ -21,6 +24,7 @@ type products{
 type brands{
   name:String,
   id:ID
+  subProduct(id):products
 }
 
 `);
